@@ -12,7 +12,11 @@ static{
 }
 
     Snack getSnack(String snackType) {
-        return supplier.get(snackType).get();
+        if (supplier.get(snackType) != null) {
+            return supplier.get(snackType).get();
+        } else {
+            throw new IllegalArgumentException("Snack type not available");
+        }
     }
 
 

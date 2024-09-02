@@ -8,6 +8,7 @@ public class Store {
         buySnack("ChocolateBar");
         buySnack("Chips");
         buySnack("Drink");
+        buySnack("Eggs");
     }
 
     private static void buySnack(String snackType) {
