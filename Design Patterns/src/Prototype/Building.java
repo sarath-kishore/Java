@@ -8,13 +8,13 @@ public class Building extends Graphic {
         this.buildingType = buildingType;
     }
 
-    public BuildingType getBuildingType() {
-        return buildingType;
-    }
-
-    public void setBuildingType(BuildingType buildingType) {
-        this.buildingType = buildingType;
-    }
+//    public BuildingType getBuildingType() {
+//        return buildingType;
+//    }
+//
+//    public void setBuildingType(BuildingType buildingType) {
+//        this.buildingType = buildingType;
+//    }
 
 
     @Override

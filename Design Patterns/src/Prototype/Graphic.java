@@ -18,3 +18,4 @@ public abstract class Graphic {
 
     public abstract Graphic clone();
 }
+
