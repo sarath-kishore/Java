@@ -6,8 +6,9 @@ public class quicksort {
 
     public static void main(String[] args) {
         // int[] arr = new int[]{8, 4, 5, 1, 33, 2, 9};
-        int[] arr = new int[]{2,13,4,1,3,6,1,28};
-        // int[] arr = new int[]{23,4,1,7,3,8,2,1};
+        int[] arr = new int[]{5,4,3,2,1};
+//        int[] arr = new int[]{2,13,4,1,3,6,1,28};
+//         int[] arr = new int[]{23,4,1,7,3,8,2,1};
 
 
         for(int a=0; a<arr.length; a++){
@@ -64,11 +65,12 @@ public class quicksort {
         System.out.println();
 
         while(i<j){
-            while(arr[i]<=pivot && i<high){
+            while(i<=high && arr[i]<=pivot  ){
                 i++;
             }
 
-            while(arr[j]>=pivot && j>low){
+            while(j>=low && arr[j]>=pivot){
+//                System.out.println(low + " - " + j);
                 j--;
             }
 
