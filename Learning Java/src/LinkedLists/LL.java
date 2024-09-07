@@ -36,9 +36,14 @@ public class LL {
         return;
     }
 
-    public void reorderList(Node head) {
+    public void reorderList() {
+        if (head == null || head.next == null) {
+            return;
+        }
+
         Node mid = getMid(head);
         Node rightHead = reverseList(mid);
+        display(rightHead);
         Node leftHead = head;
         Node leftNext = leftHead.next;
         Node rightNext = rightHead.next;
@@ -359,6 +364,16 @@ public class LL {
     public void display(){
         Node current = head;
 
+        while(current!=null){
+            System.out.print(current.val + " -> ");
+            current = current.next;
+        }
+        System.out.println("End ");
+    }
+
+    public void display(Node node){
+        Node current = node;
+        System.out.println("Starting from node: " + node.val);
         while(current!=null){
             System.out.print(current.val + " -> ");
             current = current.next;

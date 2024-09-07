@@ -18,21 +18,21 @@ public class driverLL {
 //        list.showTail();
 //        list.isPalindrome();
 
-        list.insertLast(15);
-        list.insertFirst(1);
-        list.insertFirst(2);
-        list.insertLast(16);
-        list.insertFirst(3);
-        list.insertFirst(4);
-        list.insertLast(10);
-        list.insertLast(11);
-        list.display();
-        list.rotateRight(10);
-        list.display();
-//        list.getMid();
-        System.out.println("List size: " + list.size);
-        list.showHead();
-        list.showTail();
+//        list.insertLast(15);
+//        list.insertFirst(1);
+//        list.insertFirst(2);
+//        list.insertLast(16);
+//        list.insertFirst(3);
+//        list.insertFirst(4);
+//        list.insertLast(10);
+//        list.insertLast(11);
+//        list.display();
+//        list.rotateRight(10);
+//        list.display();
+////        list.getMid();
+//        System.out.println("List size: " + list.size);
+//        list.showHead();
+//        list.showTail();
 
 
 //        list.reverseRecur();
@@ -66,5 +66,23 @@ public class driverLL {
 //        System.out.println("List size: " + list.size);
 //        list.showHead();
 //        list.showTail();
+
+
+        list.insertLast(1);
+        list.insertLast(2);
+        list.insertLast(3);
+        list.insertLast(4);
+        list.insertLast(5);
+        list.insertLast(6);
+        list.insertLast(7);
+        list.insertLast(8);
+//        list.insertLast(9);
+        list.display();
+        list.reorderList();
+        list.display();
+//        list.getMid();
+        System.out.println("List size: " + list.size);
+        list.showHead();
+        list.showTail();
     }
 }
