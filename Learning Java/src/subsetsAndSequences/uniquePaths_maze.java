@@ -1,28 +1,32 @@
 package subsetsAndSequences;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 public class uniquePaths_maze {
     public static void main(String[] args) {
-//        int m = 3;
-//        int n = 7;
-//        System.out.println("Unique paths count : " + countPaths(m, n));
-//        System.out.println("Unique paths count : " + countPaths2(m, n));
-//        System.out.println("Unique paths through maze : " + getPaths(0, 0, m ,n, "") + " - Path count: " + straightPathCounter);
-//        System.out.println("Unique paths through maze including diagonal : " + getPathsDiagonal(0, 0, m ,n, "") + " - Path count: " + diagonalPathCounter);
-
         int m = 3;
-        int n = 3;
-        boolean[][] board = {
-                {true, true, true},
-                {true, true, true},
-                {true, true, true}
-        };
-        int[][] pathN = new int[m][n];
+        int n = 7;
+        System.out.println("Unique paths count : " + countPaths(m, n));
+        System.out.println("Unique paths count : " + countPaths2(m, n));
+        System.out.println("Unique paths through maze : " + getPaths(0, 0, m ,n, "") + " - Path count: " + straightPathCounter);
+        System.out.println("Unique paths through maze including diagonal : " + getPathsDiagonal(0, 0, m ,n, "") + " - Path count: " + diagonalPathCounter);
 
-//        pathRestrictions(0,0 , "", board);
-        allPathsPrint(0,0 , "", board, pathN, 1);
+//        int m = 4;
+//        int n = 3;
+////        System.out.println("Shortest path : " + shortestPath(m, n));
+////
+//        boolean[][] board = {
+//                {true, true, true},
+//                {true, true, true},
+//                {true, true, true},
+//                {true, true, true}
+//        };
+//        int[][] pathN = new int[m][n];
+//
+////        pathRestrictions(0,0 , "", board);
+//        allPathsPrint(0,0 , "", board, pathN, 1);
 
     }
 
@@ -153,7 +157,7 @@ public class uniquePaths_maze {
 
     static int countPaths2(int r, int c){
         // only vertical and horizontal traversal.
-        // uses memoization and dynamic programming
+        // uses tabulation and dynamic programming
 //        https://www.youtube.com/watch?v=sLuKQ9mZFz0
 
 
@@ -176,4 +180,42 @@ public class uniquePaths_maze {
         return dp[r-1][c-1];
 
     }
+
+    static int shortestPath(int r, int c){
+        // only vertical and horizontal traversal.
+        // uses memoization and dynamic programming
+//        https://www.youtube.com/watch?v=sLuKQ9mZFz0
+
+
+        int[][]dp = new int[r][c];
+        dp[0][0] = 1;
+//        for(int[]row: dp)
+//            Arrays.fill(row, Integer.MAX_VALUE);
+//
+//        for(int i=0; i<r; i++){
+//            dp[i][0] = 1;
+//        }
+//
+//        for(int j=0; j<c; j++){
+//            dp[0][j] = 1;
+//        }
+
+        for(int i=0; i<r; i++){
+            for(int j=0; j<c; j++){
+                if(i==0 && j==0)    continue;
+                int left = Integer.MAX_VALUE;
+                int top = Integer.MAX_VALUE;
+                if(i>0)
+                    top = dp[i-1][j];
+                if(j>0)
+                    left = dp[i][j-1];
+
+                dp[i][j] = Math.min(top, left) + 1;
+            }
+        }
+
+        return dp[r-1][c-1];
+
+    }
+
 }

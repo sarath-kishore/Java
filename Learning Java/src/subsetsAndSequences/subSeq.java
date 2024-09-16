@@ -8,6 +8,19 @@ public class subSeq {
     public static void main(String[] args) {
         String t = "12";
 System.out.println(Integer.parseInt(t)+1);
+
+//        int[] nums = {1,2,3};
+        int[] nums = {1,1,2};
+
+        boolean[] vis = new boolean[nums.length];
+        List<List<Integer>> ans = new ArrayList<>();
+        permutationsIntegers(ans, new ArrayList<>(), nums, vis);
+        System.out.println(ans);
+
+        System.out.println(permutationsIntegersReturn(new ArrayList<>(), nums, vis));
+        System.out.println(permutationsIntegersReturnCount(new ArrayList<>(), nums, vis));
+
+
         System.out.println(permutations("", "abc"));
         System.out.println(permutationsCount("", "abc"));
 
@@ -27,6 +40,7 @@ System.out.println(Integer.parseInt(t)+1);
 //        }
 
         printSubsetsIter();
+
      }
 
      static int permutationsCount(String p, String up){
@@ -67,6 +81,66 @@ System.out.println(Integer.parseInt(t)+1);
 
         return perms;
      }
+
+     static int permutationsIntegersReturnCount(List<Integer> p, int[] nums, boolean[] vis){
+        if(p.size() == nums.length)
+            return 1;
+
+        int count = 0;
+
+        for(int i=0; i<nums.length; i++){
+            if(vis[i] || (i>0 && nums[i] == nums[i-1] && !vis[i-1])) continue;
+
+            p.add(nums[i]);
+            vis[i] = true;
+            count += permutationsIntegersReturnCount(p, nums, vis);
+            p.remove(p.size()-1);
+            vis[i] = false;
+
+        }
+
+        return count;
+     }
+    static List<List<Integer>> permutationsIntegersReturn( List<Integer> p, int[] nums, boolean[]vis){
+        if(p.size() == nums.length){
+            List<List<Integer>> temp = new ArrayList<>();
+            temp.add(new ArrayList<>(p));
+            return temp;
+        }
+
+        List<List<Integer>> ans = new ArrayList<>();
+
+        for(int i = 0; i<nums.length; i++){
+            if(vis[i] || (i>0 && nums[i] == nums[i-1] && !vis[i-1])) continue;
+            p.add(nums[i]);
+            vis[i] = true;
+            ans.addAll(permutationsIntegersReturn(p, nums, vis));
+            p.remove(p.size()-1);
+            vis[i] = false;
+
+        }
+
+        return ans;
+    }
+
+    static void permutationsIntegers(List<List<Integer>> ans, List<Integer> p, int[] nums, boolean[]vis){
+        if(p.size() == nums.length){
+            ans.add(new ArrayList<>(p));
+            return;
+        }
+
+        for(int i = 0; i<nums.length; i++){
+            if(vis[i] || (i>0 && nums[i] == nums[i-1] && !vis[i-1])) continue;
+            p.add(nums[i]);
+            vis[i] = true;
+            permutationsIntegers(ans, p, nums, vis);
+            p.remove(p.size()-1);
+            vis[i] = false;
+
+        }
+
+        return;
+    }
 
      static void printSubsetsIter(){
         // time complexity: O(n * 2^n); 2^n is the number of subsets.

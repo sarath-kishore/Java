@@ -6,8 +6,10 @@ public class bitwiseOps {
     public static void main(String[] args) {
 //        System.out.println(isOdd(4));
 //        System.out.println(Integer.toBinaryString(getIbit(3, 2)));
+        removeLastSetBit(5);
         setIbit(2, 1);
         resetIbit(2, 2 );
+        checkIfPowOfTwo(5);
 //        System.out.println((3<<1));
 //        System.out.println((4>>1));
         System.out.println(Integer.toBinaryString(3&1));
@@ -102,6 +104,14 @@ public class bitwiseOps {
     }
     static int getIbit(int n, int i){
         return n & (1<<i-1);
+    }
+
+    static void checkIfPowOfTwo(int n){
+        System.out.println((n & (n-1)) == 0 ? "Power of 2" : "Not a power of 2");
+    }
+
+    static void removeLastSetBit(int n){
+        System.out.println(Integer.toBinaryString(n & (n-1)));
     }
 
     static void setIbit(int n, int i){

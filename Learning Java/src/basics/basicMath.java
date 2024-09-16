@@ -42,6 +42,8 @@ public class basicMath {
 //
 //        System.out.println(Arrays.toString(createTargetArray(new int[]{0,1,2,3,4}, new int[]{0,1,2,2,1})));
         System.out.println((Math.log10(1234)+1));
+        System.out.println((Math.log10(1234)));
+        System.out.println((Math.log(1234) / Math.log(10)));
 //        System.out.println((Math.log10(1234)+1)%2==0);
         System.out.println("isPrime: " + isPrime(1));
         factors(28, false);
