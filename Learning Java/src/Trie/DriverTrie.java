@@ -5,6 +5,10 @@ public class DriverTrie {
 //        Basics.basics();
 //        CompleteString.completeString();
 //        CountDistinctSubstrings.countDistinctSubstrings();
-        MaxXORofTwoNumbers.maxXORofTwoNumbers(); // has its own implementation of trie
+
+
+        // has a different implementation of trie
+//        MaxXORofTwoNumbers.maxXORofTwoNumbers();
+        MaxXORofQueries.maxXORofQueries();
     }
 }
