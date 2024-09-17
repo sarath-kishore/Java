@@ -138,4 +138,23 @@ public class Trie {
 //        return flag;
     }
 
+    int countDistinctSubstrings(String word){
+        int count = 0;
+
+        for(int i=0; i<word.length(); i++){
+            Node curr = root;
+            for(int j=i; j<word.length(); j++){
+                char ch = word.charAt(j);
+                if(!curr.containsKey(ch)){
+                    System.out.println(word.substring(i, j+1));
+                    curr.put(ch);
+                    count++;
+                }
+                curr = curr.get(ch);
+            }
+        }
+
+        return count;
+    }
+
 }
