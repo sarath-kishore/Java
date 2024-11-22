@@ -1,5 +1,7 @@
 package com.mlcp.spring.controller;
 
+import com.mlcp.spring.exception.BadCommandException;
+import com.mlcp.spring.exception.SpotFullException;
 import com.mlcp.spring.model.*;
 import com.mlcp.spring.service.ParkingLotBookingHistoryService;
 import com.mlcp.spring.service.ParkingLotService;
@@ -31,7 +33,7 @@ public class ParkingSystemController {
     }
 
     @PostMapping("/mark-unavailable")
-    public ResponseEntity<String> markSpotUnavailable(@RequestBody List<UpdateSpotDetails> unavailableSpots) {
+    public ResponseEntity<String> markSpotUnavailable(@RequestBody List<UpdateSpotDetails> unavailableSpots) throws BadCommandException {
         return parkingLotService.markUnavailable(unavailableSpots);
     }
 
@@ -41,12 +43,12 @@ public class ParkingSystemController {
     }
 
     @PostMapping("/reserve")
-    public ResponseEntity<String> reserveSpot(@RequestBody CustomerDetails customer) {
+    public ResponseEntity<String> reserveSpot(@RequestBody CustomerDetails customer) throws SpotFullException {
         return parkingLotService.reserveSpot(customer);
     }
 
     @PostMapping("/vacate")
-    public ResponseEntity<String> vacateSpot(@RequestBody UpdateSpotDetails spotDetails) {
+    public ResponseEntity<String> vacateSpot(@RequestBody UpdateSpotDetails spotDetails) throws BadCommandException {
         return parkingLotService.vacateSpot(spotDetails);
     }
 
