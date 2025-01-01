@@ -15,6 +15,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Map;
 
 //@RestController
 @Controller
@@ -31,7 +32,8 @@ public class OrderController {
 
     @PostMapping
     public String createOrder(@RequestParam("name") String name, Model model) throws OrderException {
-//        try {
+        System.out.println("inside create order 1");
+        //        try {
             Order order = new Order();
             order.setName(name);
             Order createdOrder = orderService.createOrder(order);
@@ -49,9 +51,10 @@ public class OrderController {
 //        }
     }
 
-    // Endpoint to create a new order
+    // Endpoint to create a new order using postman
     @PostMapping("/api/orders")
     public ResponseEntity<?> createOrder2(@RequestBody Order order, Model model) throws OrderException {
+        System.out.println("inside create order 2");
         Order createdOrder = orderService.createOrder(order);
         return ResponseEntity.status(HttpStatus.CREATED).body(createdOrder);
     }
@@ -87,7 +90,11 @@ public class OrderController {
         return ResponseEntity.ok(orders);
     }
     @GetMapping("/api/orders/csrf")
+    @ResponseBody // since thymeleaf is being used to render html pages, this annotation is necessary to indicate that this endpoint is a REST endpoint and not to be resolved by thymeleaf engine
     public CsrfToken getCSRF(HttpServletRequest request){
+//    public Map<String, CsrfToken> getCSRF(HttpServletRequest request){
+        System.out.println("inside get mapping csrf");
         return (CsrfToken) request.getAttribute("_csrf");
+//        return Map.of("csrf", (CsrfToken) request.getAttribute("_csrf"));
     }
 }

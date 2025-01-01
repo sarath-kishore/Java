@@ -1,9 +1,9 @@
 package com.springboot.demo1_producer.SpringBootAllinDemo_Producer.controller;
 
 import com.springboot.demo1_producer.SpringBootAllinDemo_Producer.model.User;
+import com.springboot.demo1_producer.SpringBootAllinDemo_Producer.service.JwtService;
 import com.springboot.demo1_producer.SpringBootAllinDemo_Producer.service.UserService;
 import jakarta.servlet.http.HttpSession;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -26,20 +26,26 @@ import org.springframework.web.context.request.ServletRequestAttributes;
 @Controller
 public class LoginController {
 
-    @Autowired
     private AuthenticationManager authenticationManager;
 
-    @Autowired
     private UserDetailsService userDetailsService;
 
-    @Autowired
     private BCryptPasswordEncoder passwordEncoder;
-    @Autowired
     private UserService userService;
+
+    private JwtService jwtService;
+
+    public LoginController(AuthenticationManager authenticationManager, UserDetailsService userDetailsService, BCryptPasswordEncoder passwordEncoder, UserService userService, JwtService jwtService) {
+        this.authenticationManager = authenticationManager;
+        this.userDetailsService = userDetailsService;
+        this.passwordEncoder = passwordEncoder;
+        this.userService = userService;
+        this.jwtService = jwtService;
+    }
 
     @GetMapping("/login")
     public String showLoginForm() {
-        System.out.println("inside LoginC");
+        System.out.println("inside get mapping LoginC");
         // Show your custom login form (index.html or login.html)
         return "login"; // Returns the login.html template
     }
@@ -47,6 +53,7 @@ public class LoginController {
 
     @PostMapping("/login")
     public String authenticateUser(@RequestParam("username") String username, @RequestParam("password") String password, Model model) {
+        System.out.println("inside post mapping loginC");
         return login(username, password);
     }
 
@@ -70,19 +77,34 @@ public class LoginController {
 
         System.out.println(authentication);
         System.out.println(authentication.getName());
+
         if(!authentication.isAuthenticated()) {
+            // user invalid
             System.out.println("User not found LoginC");
             throw new UsernameNotFoundException("");
         }
+
         System.out.println("authenticated LoginC");
-        // If authentication is successful, set the authentication in the security context
+        // authentication is successful, set the authentication in the security context
         SecurityContextHolder.getContext().setAuthentication(authentication);
 
-        // Create a new session and store the authentication object
-        HttpSession session = ((ServletRequestAttributes) RequestContextHolder
-                .getRequestAttributes()).getRequest().getSession(true);
-        session.setAttribute(HttpSessionSecurityContextRepository.SPRING_SECURITY_CONTEXT_KEY,
-                SecurityContextHolder.getContext());
+        // Create a new session and store the authentication object -> for session based auth
+//        HttpSession session = ((ServletRequestAttributes) RequestContextHolder
+//                .getRequestAttributes()).getRequest().getSession(true);
+//        session.setAttribute(HttpSessionSecurityContextRepository.SPRING_SECURITY_CONTEXT_KEY,
+//                SecurityContextHolder.getContext());
+//  enable above section for session-based auth. disable session state for JWT usage.
+
+
+
+        // generate jwt
+        User user = new User();
+        user.setUsername(username);
+        user.setPassword(password);
+
+        String jwt = jwtService.generateToken(user);
+
+        System.out.println("new JWT generated : " + jwt);
 
 
 
@@ -108,4 +130,5 @@ public class LoginController {
             return ResponseEntity.status(HttpStatus.FORBIDDEN).body("Not authenticated");
         }
     }
+
 }

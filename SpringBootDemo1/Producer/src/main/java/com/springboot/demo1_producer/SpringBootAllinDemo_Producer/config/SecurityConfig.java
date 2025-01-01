@@ -1,7 +1,5 @@
 package com.springboot.demo1_producer.SpringBootAllinDemo_Producer.config;
 
-import jakarta.servlet.http.HttpServletRequest;
-import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -11,16 +9,10 @@ import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
-import org.springframework.security.config.http.SessionCreationPolicy;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.userdetails.User;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-import org.springframework.security.crypto.password.NoOpPasswordEncoder;
-import org.springframework.security.provisioning.InMemoryUserDetailsManager;
 import org.springframework.security.web.SecurityFilterChain;
-import org.springframework.security.web.authentication.logout.SecurityContextLogoutHandler;
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
 @Configuration
 @EnableWebSecurity
@@ -28,19 +20,22 @@ public class SecurityConfig {
 //"/api/orders/**",
 
     private final UserDetailsService userDetailsService;
-    public SecurityConfig(UserDetailsService userDetailsService) {
+    private final JwtAuthenticationFilter jwtAuthenticationFilter;
+
+    public SecurityConfig(UserDetailsService userDetailsService, JwtAuthenticationFilter jwtAuthenticationFilter) {
         this.userDetailsService = userDetailsService;
+        this.jwtAuthenticationFilter = jwtAuthenticationFilter;
     }
 
     @Bean
     public  SecurityFilterChain securityFilterChain(HttpSecurity httpSecurity) throws Exception {
         httpSecurity
-                .csrf(csrf -> csrf.disable())
-//                .csrf(Customizer.withDefaults()) // Enable CSRF protection
+//                .csrf(csrf -> csrf.disable())
+                .csrf(Customizer.withDefaults()) // Enable CSRF protection. when enabling this, make sure to enable csrf hidden fields in all html files
                 .authorizeHttpRequests(request -> request
                         .requestMatchers("/register", "/login", "/logout", "/api/register", "/check-session", "/api/orders/csrf").permitAll()
                         .anyRequest().authenticated())
-//                .authenticationProvider(authenticationProvider())
+                .authenticationProvider(authenticationProvider())
                 .exceptionHandling(ex -> ex
                         .authenticationEntryPoint(new CustomAuthenticationEntryPoint())
                 )
@@ -63,10 +58,11 @@ public class SecurityConfig {
                                 .logoutSuccessUrl("/login?logout=true")
                                 .permitAll()
                 )
-                .sessionManagement(session -> session
-                        .sessionCreationPolicy(SessionCreationPolicy.IF_REQUIRED)
-                );
-//                .httpBasic(Customizer.withDefaults())
+//                .sessionManagement(session -> session
+//                        .sessionCreationPolicy(SessionCreationPolicy.IF_REQUIRED)
+//                )
+                .httpBasic(Customizer.withDefaults()) // enable this for stateless auth and pass username password via basic auth in postman.
+                .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class)
         ;
 
         return httpSecurity.build();

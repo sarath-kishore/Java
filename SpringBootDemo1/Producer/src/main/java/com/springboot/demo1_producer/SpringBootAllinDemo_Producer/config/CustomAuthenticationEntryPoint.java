@@ -14,6 +14,7 @@ public class CustomAuthenticationEntryPoint implements AuthenticationEntryPoint 
     public void commence(HttpServletRequest request, HttpServletResponse response,
                          AuthenticationException authException) throws IOException {
         // Redirect to login page if the user is not authenticated
+        System.out.println("user not authenticated. redirecting to login page");
         response.sendRedirect("/login");
     }
 }
