@@ -3,6 +3,9 @@ package com.springboot.demo1_producer.SpringBootAllinDemo_Producer.controller;
 import com.springboot.demo1_producer.SpringBootAllinDemo_Producer.model.User;
 import com.springboot.demo1_producer.SpringBootAllinDemo_Producer.service.JwtService;
 import com.springboot.demo1_producer.SpringBootAllinDemo_Producer.service.UserService;
+import jakarta.servlet.http.Cookie;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -44,30 +47,61 @@ public class LoginController {
     }
 
     @GetMapping("/login")
-    public String showLoginForm() {
+    public String showLoginForm(HttpServletRequest request) {
         System.out.println("inside get mapping LoginC");
         // Show your custom login form (index.html or login.html)
+        if (request.getCookies() != null) {
+            for (Cookie cookie : request.getCookies()) {
+                if ("JWT".equals(cookie.getName())) {
+                    String jwt = cookie.getValue();
+                    System.out.println("User already logged in! JWT found in cookie: " + jwt);
+                    return "redirect:/";
+                    // If a JWT is found in cookie, it means a User has already authenticated. So redirect to home page.
+                    // In case the JWT is expired or invalid, that will automatically be evaluated by the security filter chain when redirected to home page.
+                }
+            }
+        }
+// If a JWT is not found in cookie, it means the users have all logged out. So go to login page.
         return "login"; // Returns the login.html template
     }
 
 
     @PostMapping("/login")
-    public String authenticateUser(@RequestParam("username") String username, @RequestParam("password") String password, Model model) {
+    public String authenticateUser(@RequestParam("username") String username, @RequestParam("password") String password, HttpServletResponse response, Model model) {
         System.out.println("inside post mapping loginC");
-        return login(username, password);
+        return login(username, password, response);
     }
 
+    // this implementation of logout is necessary when using JWT and cookie.
+    // But this is already been defined in the custom security config.
+//    @PostMapping("/logout")
+//    public String logout(HttpServletResponse response) {
+//        jwtService.clearJWTcookie(response);
+//        return "Logged out successfully";
+//    }
+
+
+
+//    @GetMapping("/register")
+//    public String showRegisterForm() {
+//        System.out.println("inside get mapping RegisterC");
+//        // Show your custom login form (index.html or login.html)
+//        return "register"; // Returns the login.html template
+//    }
+
+
+    // to be used with postman to register new users
     @PostMapping("/register")
-    public String addUser(@RequestParam("username") String username, @RequestParam("password") String password, Model model){
+    public String addUser(@RequestParam("username") String username, @RequestParam("password") String password, HttpServletResponse response, Model model){
         User user = new User();
         user.setUsername(username);
         user.setPassword(password);
         User temp = userService.createUser(user);
 
-        return login(username, password);
+        return login(username, password, response);
     }
 
-    public String login(String username, String password) throws BadCredentialsException{
+    public String login(String username, String password, HttpServletResponse response) throws BadCredentialsException{
         //        try {
         System.out.println("Logging user in LoginC : " + username);
 
@@ -103,9 +137,28 @@ public class LoginController {
         user.setPassword(password);
 
         String jwt = jwtService.generateToken(user);
+        String refreshJWT = jwtService.generateRefreshToken(user);
 
         System.out.println("new JWT generated : " + jwt);
+        System.out.println("new refreshJWT generated : " + refreshJWT);
 
+        // to verify the user authentication is stored in the security context
+        System.out.println(SecurityContextHolder.getContext().getAuthentication());
+
+        // Set the JWT as an HTTP-only cookie
+        Cookie jwtCookie = new Cookie("JWT", jwt);
+        jwtCookie.setHttpOnly(true);
+        jwtCookie.setPath("/");
+        jwtCookie.setMaxAge(10); // 10 seconds
+//        jwtCookie.setMaxAge(7 * 24 * 60 * 60); // 1 week
+        response.addCookie(jwtCookie);
+
+        // Set the refresh JWT as an HTTP-only cookie
+        Cookie refreshJwtCookie = new Cookie("refreshJWT", refreshJWT);
+        refreshJwtCookie.setHttpOnly(true);
+        refreshJwtCookie.setPath("/");
+        refreshJwtCookie.setMaxAge(1 * 24 * 60 * 60); // 1 min
+        response.addCookie(refreshJwtCookie);
 
 
         // Redirect or forward to another page after successful login

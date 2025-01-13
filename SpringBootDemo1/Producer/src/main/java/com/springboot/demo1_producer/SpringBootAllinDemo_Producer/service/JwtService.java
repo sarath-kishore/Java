@@ -5,6 +5,8 @@ import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
+import jakarta.servlet.http.Cookie;
+import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 
@@ -20,13 +22,34 @@ public class JwtService {
         Map<String, Object> claims = new HashMap<>();
         return Jwts
                 .builder()
-                .claims()
-                .add(claims)
+//                .setClaims(claims)
+//                .claims()
+//                .add(claims)
+                .claim("type", "access")
                 .subject(user.getUsername())
                 .issuer("SKR")
                 .issuedAt(new Date(System.currentTimeMillis()))
-                .expiration(new Date(System.currentTimeMillis() + 60*10*1000))
-                .and()
+//                .expiration(new Date(System.currentTimeMillis() + 10*60*1000)) // 10 mins
+                .expiration(new Date(System.currentTimeMillis() + 10*1000)) // 10 seconds
+//                .and()
+                .signWith(generateKey())
+                .compact();
+    }
+
+    public String generateRefreshToken(User user) {
+        Map<String, Object> claims = new HashMap<>();
+        return Jwts
+                .builder()
+//                .setClaims(claims)
+//                .claims()
+//                .add(claims)
+                .claim("type", "refresh")
+                .subject(user.getUsername())
+                .issuer("SKR")
+                .issuedAt(new Date(System.currentTimeMillis()))
+                .expiration(new Date(System.currentTimeMillis() + 10*60*1000)) // 10 mins
+//                .expiration(new Date(System.currentTimeMillis() + 10*1000)) // 10 seconds
+//                .and()
                 .signWith(generateKey())
                 .compact();
     }
@@ -58,6 +81,14 @@ public class JwtService {
                 .getPayload();
     }
 
+    public boolean isAccessToken(String jwt){
+        return "access".equals(extractClaims(jwt).get("type"));
+    }
+
+    public boolean isRefreshToken(String jwt){
+        return "refresh".equals(extractClaims(jwt).get("type"));
+    }
+
     public boolean isTokenValid(String jwt, UserDetails userDetails) {
         final String username = extractUsername(jwt);
         return (username.equals(userDetails.getUsername()) && !isTokenExpired(jwt));
@@ -71,5 +102,22 @@ public class JwtService {
         return extractClaims(jwt, Claims::getExpiration);
     }
 
+    public void clearJWTcookie(HttpServletResponse response){
+        // Create a cookie with the same name as the JWT cookie and set its max age to 0
+        Cookie jwtCookie = new Cookie("JWT", null); // Replace "JWT" with your actual cookie name
+        jwtCookie.setHttpOnly(true);
+//        jwtCookie.setSecure(true); // Use secure only if your app is on HTTPS
+        jwtCookie.setPath("/"); // Path should match the path of the original cookie
+        jwtCookie.setMaxAge(0); // Deletes the cookie immediately
+        response.addCookie(jwtCookie);
+
+        Cookie refreshJwtCookie = new Cookie("refreshJWT", null);
+        refreshJwtCookie.setHttpOnly(true);
+        refreshJwtCookie.setPath("/");
+        refreshJwtCookie.setMaxAge(0);
+        response.addCookie(refreshJwtCookie);
+
+        System.out.println("deleted jwt from cookie");
+    }
 
 }

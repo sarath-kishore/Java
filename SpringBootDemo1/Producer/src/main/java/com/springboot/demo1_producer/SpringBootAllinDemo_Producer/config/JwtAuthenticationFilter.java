@@ -1,8 +1,11 @@
 package com.springboot.demo1_producer.SpringBootAllinDemo_Producer.config;
 
+import com.springboot.demo1_producer.SpringBootAllinDemo_Producer.controller.LoginController;
 import com.springboot.demo1_producer.SpringBootAllinDemo_Producer.service.JwtService;
+import io.jsonwebtoken.ExpiredJwtException;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
+import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -28,41 +31,70 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
-        final String authHeader = request.getHeader("Authorization");
 
-        if(authHeader == null || !authHeader.startsWith("Bearer")){
-            filterChain.doFilter(request,response);
-            return;
-            // no JWT found, hence proceed with next filter in the security filter chain, in this case, it is the normal auth process
+        // Extract jwt from the cookie. cases when logging in and redirect.
+        String jwt = null;
+        if (request.getCookies() != null) {
+            for (Cookie cookie : request.getCookies()) {
+                if ("JWT".equals(cookie.getName())) {
+                    jwt = cookie.getValue();
+        System.out.println("JWT found in cookie: " + jwt);
+                    break;
+                }
+            }
+        }
+
+        // If jwt is not found in cookie, check the Authorization header for jwt.
+        if (jwt == null) {
+            final String authHeader = request.getHeader("Authorization");
+
+            if(authHeader == null || !authHeader.startsWith("Bearer")){
+                filterChain.doFilter(request,response);
+                return;
+                // no JWT found in both cookie and auth header, hence proceed with next filter in the security filter chain,
+                // in this case, it is the normal auth process
+            }
+
+            jwt = authHeader.substring(7);
+            System.out.println("jwt found in auth header: " + jwt);
         }
 
         // JWT found. validate and authenticate.
 
-        final String jwt = authHeader.substring(7);
-        final String username = jwtService.extractUsername(jwt);
+        try{
 
-        Authentication authentication =
-                SecurityContextHolder.getContext().getAuthentication();
+            final String username = jwtService.extractUsername(jwt);
 
-        if(username != null && authentication == null){
-            // user valid, but not yet authenticated, hence do set authentication process.
-            UserDetails userDetails = userDetailsService.loadUserByUsername(username);
-            System.out.println("jwt found");
-            if(jwtService.isTokenValid(jwt, userDetails)){
-                // token is valid
-                System.out.println("jwt valid");
-                UsernamePasswordAuthenticationToken authenticationToken =
-                        new UsernamePasswordAuthenticationToken(username, null,
-                                userDetails.getAuthorities());
+            Authentication authentication =
+                    SecurityContextHolder.getContext().getAuthentication();
 
-                authenticationToken.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
+            if(username != null && authentication == null){
+                // user valid, but not yet authenticated, hence do set authentication process.
+                UserDetails userDetails = userDetailsService.loadUserByUsername(username);
 
-                SecurityContextHolder.getContext().setAuthentication(authenticationToken);
-                // we came into this because authentication from securitycontext was null, hence now we have authenticated
-                // and set that authentication to the security context for subsequent access
+                    if (jwtService.isTokenValid(jwt, userDetails) && jwtService.isAccessToken(jwt)) {
+                        // token is valid
+                        System.out.println("jwt valid");
+                        UsernamePasswordAuthenticationToken authenticationToken =
+                                new UsernamePasswordAuthenticationToken(username, null,
+                                        userDetails.getAuthorities());
+
+                        authenticationToken.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
+
+                        SecurityContextHolder.getContext().setAuthentication(authenticationToken);
+                        // we came into this because authentication from securitycontext was null, hence now we have authenticated
+                        // and set that authentication to the security context for subsequent access
+                    } else {
+                        System.out.println("JWT invalid");
+                    }
+
             }
+        }catch(ExpiredJwtException e){
+            System.out.println("JWT expired exception thrown");
+            jwtService.clearJWTcookie(response);
+//            e.printStackTrace();
+            // continue with normal username-password authentication, as executed by the filterChain below.
         }
-
 
         // either already authenticated or username not found or authenticated via above IF or jwt invalid via above IF,
         // in any case, proceed to next filter in security filter chain where in valid usernames will be caught
@@ -70,4 +102,9 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
         filterChain.doFilter(request,response);
         return;
     }
+
+
+//    public void validateJWT(){
+//
+//    }
 }

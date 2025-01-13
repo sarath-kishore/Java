@@ -1,0 +1,264 @@
+
+.hover-shine .hover-span {
+  position: absolute;
+  display: block;
+  width: 0;
+  height: 0;
+  border-radius: 50%;
+  --shineColor: rgba(255,255,255,0.12);
+  background: radial-gradient( circle closest-side,var(--shineColor),transparent );
+
+  transition: width 0.1s ease-in-out, height 0.1s ease-in-out;
+  -webkit-transform: translate(-50%, -50%);
+          transform: translate(-50%, -50%);
+  z-index: 0;
+animation: slide-up 0.4s ease;
+
+}
+
+
+.hover-shine:hover .hover-span {
+  width: 250px;
+  height: 250px;
+}
+
+
+.login-video{
+    position: fixed;
+top: 0;
+left: 0;
+height: 100%;
+width: auto;
+transform: rotate(-40deg) scale(2);
+filter: blur(3px);
+pointer-events: none !important;
+}
+
+.login-module {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    /*transform: translateX(-50%);*/
+/*    padding: 0 1.8rem;*/
+/*    width: 30%;*/
+/*    min-width: 380px;*/
+    color: var(--fontDark);
+transition: all 0.2s ease;
+
+top: calc(50% - calc(var(--navbar-height) / 2));
+/*width: 40%;
+min-width: 400px;*/
+
+display: flex;
+place-content: center;
+}
+
+.login-cards{
+    overflow: hidden;
+display: grid;
+grid-template-columns: 100% 100%;
+max-width: calc(450px + 2rem);
+/*min-width: calc(400px + 2rem);*/
+padding: 3rem 1rem;
+gap: 2rem;
+place-items: center;
+}
+
+
+
+#login-form,
+#forgot-password{
+    transition: all 0.2s cubic-bezier(0.23, 1, 0.32, 1);
+}
+
+.login-cards.reset-password #login-form {
+  transform: translateX(-120%);
+}
+
+.login-cards.reset-password #forgot-password {
+  transform: translateX(calc(-100% - 2rem));
+}
+
+.login-cards .backArrowIcon{
+    align-self: start;
+}
+
+#forgot-password h5{
+    font-size: var(--font-size-main-heading);
+    margin-top: calc(var(--border-padding) / 2);
+}
+
+#forgot-password h6{
+    font-size: var(--font-size-body-regular);
+font-weight: 300;
+margin-top: calc(var(--border-padding) / 2);
+text-align: center;
+}
+
+.login-cards .card .row{
+    margin: var(--border-padding) 0;
+}
+
+.forgot-password-btn{
+    font-size: var(--font-size-body-regular);
+}
+
+.login-cards .header-icon.locked{
+    height: 100px;
+position: absolute;
+transform: translate(-50%,-80px);
+left: 50%;
+    transition: all 0.3s cubic-bezier(0.23, 1, 0.32, 1);
+}
+
+#forgot-password.reset-submitted .header-icon.locked{
+transform: translate(-50%, 123px);
+display: none;
+}
+
+#forgot-password.reset-submitted .header-icon.tick{
+transform: translate(-50%, -119px);
+}
+
+#forgot-password .header-icon.tick{
+transform: translate(-50%, -250px);
+position: absolute;
+left: 50%;
+height: 178px;
+    transition: all 0.3s cubic-bezier(0.23, 1, 0.32, 1);
+}
+
+#forgot-password .before-submit,
+#forgot-password.reset-submitted .after-submit{
+    display: flex;
+    flex-direction: column;
+}
+
+#forgot-password.reset-submitted .before-submit,
+#forgot-password .after-submit{
+    display: none;
+}
+
+.reset-form-submit{
+    display: grid;
+}
+
+
+
+.forgot-password-btn span::before {
+
+    content: '';
+    position: absolute;
+    bottom: -5px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 0%;
+    height: 2px;
+    background: var(--bg);
+    transition: all 0.3s cubic-bezier(0.23, 1, 0.32, 1);
+
+}
+
+.forgot-password-btn span:hover::before{
+    width: 100%;
+}
+
+#login-logo {
+    height: 6rem;
+    width: auto;
+    border-radius: 0.6rem;
+    position: relative;
+}
+
+#login-logo img{
+    height: 100%;
+    width: auto;
+    position: absolute;
+left: 50%;
+transform: translateX(-50%);
+}
+
+#login-form{
+    /*width: 90%;*/
+}
+
+#login-form > .row{
+    margin-top: 1.25rem;
+}
+
+.card{
+    margin-top: 1.8rem;
+    border: 0.6rem;
+    color: var(--fontLight);
+    padding: 1.25rem;
+    background: linear-gradient(50.06deg, #0D1B2A 62.24%, rgba(13, 27, 42, 0.72) 112.51%);
+    background-blend-mode: multiply;
+    box-shadow: 0px 10px 20px rgba(0, 0, 0, 0.05);
+    box-shadow: 0px 2px 4px rgba(45,35,66,0.4),0px 7px 13px -3px rgba(45,35,66,0.3),inset 3px -3px 0px rgba(0,0,0,1);
+    border-radius: 1.25rem;
+
+    background: var(--btncolor-black2);
+font-family: var(--font-apple-system);
+margin: 0;
+padding: calc(2 * var(--border-padding));
+display: flex;
+}
+
+
+/*#login_email, #login_passwd{
+    background: transparent;
+    color: var(--fontLight);
+
+    border-radius: 0;
+    border: none;
+    border-bottom: 1px solid;
+}*/
+
+
+/*#login-submit {
+    margin: auto;
+    margin-top: 1.8rem;
+    width: 100%;
+}*/
+.login-cards .primaryBtn{
+    margin: auto;
+  margin-top: auto;
+margin-top: 1.8rem;
+width: 100%;
+}
+
+#forgot_passwd{
+    margin-top: 1.25rem;
+}
+
+#forgot_passwd a{
+    color: var(--fontLight);
+
+}
+
+
+
+.login-leads-area{
+    margin-top: 1.8rem;
+    text-align: center;
+}
+
+.login-leads-area h6{
+    margin: 5px;
+}
+
+.login-leads-area a{
+    color: var(--fontDark);
+}
+
+
+
+
+@media only screen and (max-width: 767px) {
+
+    .login-module {
+        width: 100%;
+    min-width: unset;
+    }
+
