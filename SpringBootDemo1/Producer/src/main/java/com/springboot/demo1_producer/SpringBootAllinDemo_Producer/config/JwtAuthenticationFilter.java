@@ -72,7 +72,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
                 // user valid, but not yet authenticated, hence do set authentication process.
                 UserDetails userDetails = userDetailsService.loadUserByUsername(username);
 
-                    if (jwtService.isTokenValid(jwt, userDetails) && jwtService.isAccessToken(jwt)) {
+                    if (jwtService.isAccessTokenValid(jwt, userDetails) && jwtService.isAccessToken(jwt)) {
                         // token is valid
                         System.out.println("jwt valid");
                         UsernamePasswordAuthenticationToken authenticationToken =

@@ -33,7 +33,7 @@ public class SecurityConfig {
 //                .csrf(csrf -> csrf.disable())
                 .csrf(Customizer.withDefaults()) // Enable CSRF protection. when enabling this, make sure to enable csrf hidden fields in all html files
                 .authorizeHttpRequests(request -> request
-                        .requestMatchers("/css/**", "/js/**", "/images/**", "/register", "/login", "/logout", "/api/register", "/check-session", "/api/orders/csrf").permitAll()
+                        .requestMatchers("/css/**", "/js/**", "/images/**", "/auth/refresh", "/register", "/login", "/logout", "/api/register", "/check-session", "/api/orders/csrf").permitAll()
                         .anyRequest().authenticated())
                 .authenticationProvider(authenticationProvider())
                 .exceptionHandling(ex -> ex

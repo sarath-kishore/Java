@@ -6,7 +6,10 @@ import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
 import jakarta.servlet.http.Cookie;
+import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 
@@ -18,6 +21,7 @@ import java.util.function.Function;
 
 @Service
 public class JwtService {
+
     public String generateToken(User user) {
         Map<String, Object> claims = new HashMap<>();
         return Jwts
@@ -52,6 +56,14 @@ public class JwtService {
 //                .and()
                 .signWith(generateKey())
                 .compact();
+    }
+
+    public String refreshJWT(String refreshJWT, UserDetails userDetails){
+
+        User user = new User();
+        user.setUsername(userDetails.getUsername());
+        String newJWT = generateToken(user);
+        return newJWT;
     }
 
     private SecretKey generateKey() {
@@ -89,7 +101,14 @@ public class JwtService {
         return "refresh".equals(extractClaims(jwt).get("type"));
     }
 
-    public boolean isTokenValid(String jwt, UserDetails userDetails) {
+    public boolean isAccessTokenValid(String jwt, UserDetails userDetails) {
+        // check expiry, check if the username from the token is equal to the user record matched by the username from the token
+        final String username = extractUsername(jwt);
+        return (username.equals(userDetails.getUsername()) && !isTokenExpired(jwt));
+    }
+
+    public boolean isRefreshTokenValid(String jwt, UserDetails userDetails) {
+        // check expiry, check if the username from the token is equal to the user record matched by the username from the token
         final String username = extractUsername(jwt);
         return (username.equals(userDetails.getUsername()) && !isTokenExpired(jwt));
     }
@@ -113,8 +132,30 @@ public class JwtService {
 
         Cookie refreshJwtCookie = new Cookie("refreshJWT", null);
         refreshJwtCookie.setHttpOnly(true);
+////        refreshJwtCookie.setSecure(true); // Use secure only if your app is on HTTPS
         refreshJwtCookie.setPath("/");
         refreshJwtCookie.setMaxAge(0);
+        response.addCookie(refreshJwtCookie);
+
+        System.out.println("deleted jwt from cookie");
+    }
+
+    public void setJWTcookie(HttpServletResponse response, String jwt, String refreshJWT){
+        // Set the JWT as an HTTP-only cookie
+        Cookie jwtCookie = new Cookie("JWT", jwt);
+        jwtCookie.setHttpOnly(true);
+//        jwtCookie.setSecure(true); // Use secure only if your app is on HTTPS
+        jwtCookie.setPath("/");
+        jwtCookie.setMaxAge(10); // 10 seconds
+//        jwtCookie.setMaxAge(7 * 24 * 60 * 60); // 1 week
+        response.addCookie(jwtCookie);
+
+        // Set the refresh JWT as an HTTP-only cookie
+        Cookie refreshJwtCookie = new Cookie("refreshJWT", refreshJWT);
+        refreshJwtCookie.setHttpOnly(true);
+//        refreshJwtCookie.setSecure(true); // Use secure only if your app is on HTTPS
+        refreshJwtCookie.setPath("/auth/refresh");
+        refreshJwtCookie.setMaxAge(1 * 24 * 60 * 60); // 1 min
         response.addCookie(refreshJwtCookie);
 
         System.out.println("deleted jwt from cookie");

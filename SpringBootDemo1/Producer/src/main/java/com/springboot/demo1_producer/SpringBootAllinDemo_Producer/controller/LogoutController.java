@@ -23,13 +23,5 @@ public class LogoutController {
 //        return "redirect:/login";
 //    }
 
-    @GetMapping("/logout-now")
-    public String logoutNow(HttpServletRequest request, HttpServletResponse response) {
-        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-        if (auth != null) {
-            new SecurityContextLogoutHandler().logout(request, response, auth);
-        }
-        System.out.println("logouting");
-        return "redirect:/login?logout=true";
-    }
+
 }
