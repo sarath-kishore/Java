@@ -6,6 +6,8 @@ public class bitwiseOps {
     public static void main(String[] args) {
 //        System.out.println(isOdd(4));
 //        System.out.println(Integer.toBinaryString(getIbit(3, 2)));
+        System.out.println(Integer.toBinaryString(findRightSetBit(8)));
+        System.out.println(Integer.toBinaryString(findRightSetBit2(8)));
         removeLastSetBit(5);
         setIbit(2, 1);
         resetIbit(2, 2 );
@@ -17,7 +19,7 @@ public class bitwiseOps {
         System.out.println(power(2, 5));
         System.out.println(numOfSetBits(-3));
         System.out.println(Integer.toBinaryString(-3));
-//        System.out.println(Integer.toBinaryString(findRightSetBit(8)));
+
 //        System.out.println(Integer.toBinaryString((8)));
 //        System.out.println(Integer.toBinaryString((-8)));
         System.out.println(reverseBits(Integer.parseInt("00000010100101000001111010011100", 2)));
@@ -101,6 +103,9 @@ public class bitwiseOps {
 
     static int findRightSetBit(int n){
         return (n & (-n));
+    }
+    static int findRightSetBit2(int n){
+        return (n & (n-1)) ^ n;
     }
     static int getIbit(int n, int i){
         return n & (1<<i-1);

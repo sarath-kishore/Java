@@ -82,6 +82,25 @@ System.out.println(Integer.parseInt(t)+1);
         return perms;
      }
 
+    static void permutationsIntegers(List<List<Integer>> ans, List<Integer> p, int[] nums, boolean[]vis){
+        if(p.size() == nums.length){
+            ans.add(new ArrayList<>(p));
+            return;
+        }
+
+        for(int i = 0; i<nums.length; i++){
+            if(vis[i] || (i>0 && nums[i] == nums[i-1] && !vis[i-1])) continue;
+            p.add(nums[i]);
+            vis[i] = true;
+            permutationsIntegers(ans, p, nums, vis);
+            p.remove(p.size()-1);
+            vis[i] = false;
+
+        }
+
+        return;
+    }
+
      static int permutationsIntegersReturnCount(List<Integer> p, int[] nums, boolean[] vis){
         if(p.size() == nums.length)
             return 1;
@@ -123,24 +142,6 @@ System.out.println(Integer.parseInt(t)+1);
         return ans;
     }
 
-    static void permutationsIntegers(List<List<Integer>> ans, List<Integer> p, int[] nums, boolean[]vis){
-        if(p.size() == nums.length){
-            ans.add(new ArrayList<>(p));
-            return;
-        }
-
-        for(int i = 0; i<nums.length; i++){
-            if(vis[i] || (i>0 && nums[i] == nums[i-1] && !vis[i-1])) continue;
-            p.add(nums[i]);
-            vis[i] = true;
-            permutationsIntegers(ans, p, nums, vis);
-            p.remove(p.size()-1);
-            vis[i] = false;
-
-        }
-
-        return;
-    }
 
      static void printSubsetsIter(){
         // time complexity: O(n * 2^n); 2^n is the number of subsets.

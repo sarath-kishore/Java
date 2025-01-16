@@ -8,11 +8,13 @@ public class KarpRabin {
         for(int i=0; i<str.length(); i++){
             hash += str.charAt(i) * Math.pow(PRIME,i);
         }
+        System.out.println(hash);
         return hash;
     }
 
     private double rollHash(double oldHash, char firstChar, char newLastChar, int patternLength){
         double newHash = (oldHash - firstChar) / PRIME;
+        System.out.println(newHash);
         newHash += newLastChar * Math.pow(PRIME, patternLength-1);
 
         return newHash;

@@ -16,8 +16,8 @@ public class CompleteString {
         String longest = "";
         for(String str : words){
             if(trie.checkIfComplete(str)){
-                if(str.equals(longest) && str.compareTo(longest) < 0)
-                    longest = str;
+                if(str.length() == longest.length() && str.compareTo(longest) < 0)
+                    longest = str; // store lexicographically smallest word
                 else if(str.length() > longest.length())
                     longest = str;
             }

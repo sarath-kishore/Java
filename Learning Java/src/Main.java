@@ -1,5 +1,4 @@
 import java.lang.*;
-import java.util.*;
 
 class pair{
     int a,b;

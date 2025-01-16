@@ -26,7 +26,8 @@ public class findMissingPositive {
             if(arr[j]!=j+1)
             {
                 System.out.println("answer");
-                return j+1;}
+                return j+1;
+            }
         }
         return arr.length+1;
     }

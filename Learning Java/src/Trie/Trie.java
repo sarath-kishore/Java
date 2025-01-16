@@ -9,7 +9,7 @@ public class Trie {
         private int ew; // ends with
 
         Node(){
-            links = new Node[26];
+            links = new Node[26]; // 26 characters. since we are using this particular trie for storing english words.
             isEnd = false;
         }
 
