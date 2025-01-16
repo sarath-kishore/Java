@@ -1,4 +1,6 @@
-package Tree.BST;
+package Tree.BalancedTrees.BST;
+
+import Tree.BalancedTrees.Tree;
 
 public class App {
     public static void main(String[] args) {

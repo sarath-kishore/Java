@@ -1,6 +1,9 @@
-package Tree.BST;
+package Tree.BalancedTrees.BST;
 
-public class BinarySearchTree implements Tree{
+import Tree.BalancedTrees.Node;
+import Tree.BalancedTrees.Tree;
+
+public class BinarySearchTree implements Tree {
 
     private Node root = null;
 
@@ -22,6 +25,9 @@ public class BinarySearchTree implements Tree{
             node.setLeftChild(insert(data, node.getLeftChild()));
         else if(Integer.compare(data, node.getData()) > 0)
             node.setRightChild(insert(data, node.getRightChild()));
+//        else{
+//            (Integer.compare(data, node.getData()) == 0) -> meaning data already exists. do nothing.
+//        }
 
         return node;
     }
@@ -76,7 +82,7 @@ public class BinarySearchTree implements Tree{
         return getMax(root);
     }
 
-    private int getMax(Node node) {
+    protected int getMax(Node node) {
         while(node.getRightChild()!=null)
             node = node.getRightChild();
         return node.getData();

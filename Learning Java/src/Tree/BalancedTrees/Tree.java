@@ -1,4 +1,4 @@
-package Tree.BST;
+package Tree.BalancedTrees;
 
 public interface Tree {
     Tree insert(int data);
