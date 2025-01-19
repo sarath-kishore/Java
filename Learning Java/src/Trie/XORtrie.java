@@ -53,8 +53,8 @@ class XORTrie{
     }
 
     int getMax(int n){
-        // all elements are already added in the trie in binary 32 bit form.
-        // now checking against n for the maximum XOR.
+        // all elements from arr1 are already added in the trie in binary 32 bit form.
+        // now checking against n from arr2 for the maximum XOR.
         // returns the maximum xor value of n ^ across all elements in the 1st array that was inserted.
         Node curr = root;
         int maxXOR = 0;

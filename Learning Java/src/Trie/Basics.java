@@ -47,5 +47,17 @@ public class Basics {
 
         System.out.println("Count words starting with appl: " +
                 trie.countWordsStartingWith("appl"));
+
+        trie.erase("apple");
+        trie.erase("apple");
+// here, in this implementation, erase simply alters the endswith and prefixcount counters, doesn't actually delete the node.
+// hence, after erase(), any count related functions would work in accordance with the number of erase(),
+// but any boolean or actual search related functions would work as if erase() never happened, this is because,
+// search functions work based on checking the existence of the node, not the counters.
+        System.out.println("Search words equal to apple: " +
+                trie.search("appl"));
+
+        System.out.println("Search words starting with appl: " +
+                trie.startsWith("appl"));
     }
 }

@@ -1,11 +1,12 @@
 package Trie;
-
 import java.util.Arrays;
 import java.util.List;
 import java.util.PriorityQueue;
 
 public class MaxXORofQueries {
-    static class Pair implements Comparable<Pair>{
+    static class Pair
+//            implements Comparable<Pair>
+    {
         int el;
         int max;
         int idx;
@@ -15,10 +16,10 @@ public class MaxXORofQueries {
             this.idx = idx;
         }
 
-        @Override
-        public int compareTo(Pair o) {
-            return Integer.compare(this.max, o.max);
-        }
+//        @Override
+//        public int compareTo(Pair o) {
+//            return Integer.compare(this.max, o.max);
+//        }
     }
     static void maxXORofQueries(){
 //        int[] arr = {3, 10, 5, 25, 2, 8};
@@ -30,11 +31,13 @@ public class MaxXORofQueries {
         int[] arr = {5,2,4,6,6,3};
         int[][] queries = {{12,4},{8,1},{6,3}}; // out: 15,-1,5
 
-        PriorityQueue<Pair> pq = new PriorityQueue<>(); // sort the queries in order of max values
+        PriorityQueue<Pair> pq = new PriorityQueue<>((a,b)->{
+            return Integer.compare(a.max, b.max); // same as implementing comparable in Pair class
+        }); // sort the queries in order of max values
 
         for(int i =0; i<queries.length; i++){
             int[] q = queries[i];
-            pq.offer(new Pair(q[0], q[1], i));
+            pq.offer(new Pair(q[0], q[1], i)); // element, max, idx
         }
 
         Arrays.sort(arr); // sort elements in order to add the elements in trie based on max value of queries

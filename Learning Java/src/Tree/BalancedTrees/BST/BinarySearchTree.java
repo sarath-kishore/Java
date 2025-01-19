@@ -39,7 +39,7 @@ public class BinarySearchTree implements Tree {
 
     private Node delete(int data, Node node) {
         if(node == null)
-            return null;
+            return null; // node not found
 
         if(Integer.compare(data, node.getData()) < 0){
             node.setLeftChild(delete(data, node.getLeftChild()));
