@@ -18,7 +18,10 @@ public class MemoryGame {
             System.out.println("Enter r and c");
             curr[0] = sn.nextInt();
             curr[1] = sn.nextInt();
-            updateBoard(board, open, curr, prev, gameOver);
+            if(curr[0] >=0 && curr[0]< board.length && curr[1]>=0 && curr[1]< board[0].length)
+                updateBoard(board, open, curr, prev, gameOver);
+            else
+                System.out.println("Enter valid co ordinates");
         }
         printBoard(board, open);
         System.out.println("Game over! Thank you for playing.");
@@ -53,14 +56,17 @@ public class MemoryGame {
     }
 
     static void printBoard(char[][]board, boolean[][]open){
+        System.out.println("\t0\t|\t1\t|\t2\t|\t3\t|");
         for(int i=0; i< board.length; i++){
+            System.out.print(i+"\t");
             for(int j=0; j<board[0].length; j++){
                 if(open[i][j]){
-                    System.out.print(board[i][j] + "\t");
+                    System.out.print(board[i][j] + "\t|\t");
                 }else
-                    System.out.print("-\t");
+                    System.out.print("-\t|\t");
             }
             System.out.println();
+//            System.out.println("\t-\t\t-\t\t-\t\t-\t");
         }
     }
 }
